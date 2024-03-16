@@ -53,6 +53,7 @@ LEGACY_DEFAULT_CACHE_SEED = 41
 LEGACY_CACHE_DIR = ".cache"
 OPEN_API_BASE_URL_PREFIX = "https://api.openai.com"
 
+from rich import print as rprint
 
 class ModelClient(Protocol):
     """
@@ -173,6 +174,7 @@ class OpenAIClient:
             full_tool_calls: Optional[List[Optional[Dict[str, Any]]]] = None
 
             # Send the chat completion request to OpenAI's API and process the response in chunks
+            rprint(f'>>>>> OpenAIClient.create if completions.create params: {params}')
             for chunk in completions.create(**params):
                 if chunk.choices:
                     for choice in chunk.choices:
@@ -275,7 +277,9 @@ class OpenAIClient:
             # If streaming is not enabled, send a regular chat completion request
             params = params.copy()
             params["stream"] = False
+            rprint(f'>>>>> OpenAIClient.create else completions.create params: {params}')
             response = completions.create(**params)
+            rprint(f'>>>>> OpenAIClient.create else completions.create response: {response}')
 
         return response
 
